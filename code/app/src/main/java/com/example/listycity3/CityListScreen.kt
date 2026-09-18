@@ -31,14 +31,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 fun CityListScreen(
     cities: List<City>,
     onAddCity: (City) -> Unit,
-    // Sends the old city and its replacement upward so the repository can swap them
     onUpdateCity: (City, City) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var newCityName by remember { mutableStateOf("") }
     var newProvinceName by remember { mutableStateOf("") }
     var showAddCityFields by remember { mutableStateOf(false) }
-    // Null means no row is being edited
     var selectedCity by remember { mutableStateOf<City?>(null) }
 
     // Shared helper: leave edit/add mode and clear the text fields
@@ -57,7 +55,6 @@ fun CityListScreen(
             FloatingActionButton(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
-                    // Leaving edit mode before toggling add so the shared fields are not dual-purpose at once
                     selectedCity = null
                     newCityName = ""
                     newProvinceName = ""
@@ -68,7 +65,6 @@ fun CityListScreen(
             }
         }
 
-        // One field row serves both Add and Update
         if (showAddCityFields || selectedCity != null) {
             Row(
                 modifier = Modifier
@@ -95,7 +91,6 @@ fun CityListScreen(
                         if (newCityName.isNotBlank() && newProvinceName.isNotBlank()) {
                             val city = selectedCity
                             if (city != null) {
-                                // Replace rather than mutate because City properties are val
                                 onUpdateCity(
                                     city,
                                     City(name = newCityName, province = newProvinceName)
@@ -109,13 +104,11 @@ fun CityListScreen(
                         }
                     }
                 ) {
-                    // Same button, different label depending on mode
                     Text(if (selectedCity != null) "Update" else "Add City")
                 }
             }
         }
 
-        // Empty-list clicks cancel edit; child row clicks still take priority
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -126,10 +119,8 @@ fun CityListScreen(
                     city = city,
                     onClick = {
                         if (selectedCity != null) {
-                            // Any row tap while editing cancels (same or different city)
                             clearEditState()
                         } else {
-                            // Enter edit mode and pre-fill the shared fields
                             selectedCity = city
                             showAddCityFields = false
                             newCityName = city.name
@@ -178,8 +169,6 @@ fun CityListScreenPreview() {
                 City("Calgary", "AB")
             ),
             onAddCity = {},
-            // Two unused params so the lambda matches (City, City) -> Unit
-            onUpdateCity = { _, _ -> }
         )
     }
 }

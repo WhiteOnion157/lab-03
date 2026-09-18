@@ -15,7 +15,7 @@ class CityRepository {
         _cities.add(city)
     }
 
-    // City uses val, so replace the old object instead of mutating it
+    // City uses val, so need to replace the old object instead of mutating it
     fun updateCity(oldCity: City, updatedCity: City) {
         val index = _cities.indexOf(oldCity)
         if (index != -1) {
