@@ -169,6 +169,7 @@ fun CityListScreenPreview() {
                 City("Calgary", "AB")
             ),
             onAddCity = {},
+            onUpdateCity = { old, new -> }
         )
     }
 }
